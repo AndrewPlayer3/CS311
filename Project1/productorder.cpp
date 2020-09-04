@@ -9,31 +9,34 @@
 
 //Default Constructor
 ProductOrder::ProductOrder() {
-    _productName = "UNSPECIFIED";
+    _productName  = "UNSPECIFIED";
     _itemsOrdered = 0;
 }
 
 //Value Constructor
 ProductOrder::ProductOrder(const std::string& name, const int& number) {
-    _productName = name;
+    _productName  = name;
     _itemsOrdered = number;
 }
 
 //Copy Constructor
 ProductOrder::ProductOrder(const ProductOrder& Product) {
-    _productName = Product._productName;
+    _productName  = Product._productName;
     _itemsOrdered = Product._itemsOrdered;
 }
 
 //Move Constructor
-ProductOrder::ProductOrder(const ProductOrder&& Product) {
-    _productName = Product._productName; 
+ProductOrder::ProductOrder(ProductOrder&& Product) {
+    _productName  = Product._productName; 
     _itemsOrdered = Product._itemsOrdered;
+    Product._productName  = "UNSPECIFIED";
+    Product._itemsOrdered = 0;
 }
 
 //Destructor
 ProductOrder::~ProductOrder() {
-    // Whatever Dude;
+    _productName  = "";
+    _itemsOrdered = 0;
 }
 
 //Return product name
@@ -71,14 +74,14 @@ std::string ProductOrder::toString() const {
 
 //Copy Assignment Operator Overload
 ProductOrder& ProductOrder::operator=(const ProductOrder& Product) {
-    _productName = Product._productName;
+    _productName  = Product._productName;
     _itemsOrdered = Product._itemsOrdered;
     return *this;
 }
 
 //Move Assignment Operator Overload
 ProductOrder& ProductOrder::operator=(const ProductOrder&& Product) {
-    _productName = Product._productName;
+    _productName  = Product._productName;
     _itemsOrdered = Product._itemsOrdered;
     return *this;
 }
