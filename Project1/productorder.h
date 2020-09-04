@@ -5,11 +5,13 @@
  * 08/31/2020
 */
 
-#pragma once
+#ifndef PRODUCTORDER_H_
+#define PRODUCTORDER_H_
 
 #include <iostream>
 #include <sstream>
 
+//Invariants: _itemsOrdered >= 0
 class ProductOrder {
 
 private:
@@ -46,3 +48,5 @@ public:
     friend std::ostream& operator<<(std::ostringstream& output, const ProductOrder& Product);
 
 };
+
+#endif

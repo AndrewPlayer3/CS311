@@ -85,15 +85,15 @@ ProductOrder& ProductOrder::operator=(const ProductOrder&& Product) {
 
 //Equality Operator Overload
 bool ProductOrder::operator==(const ProductOrder& Product) const {
-    if(_itemsOrdered != Product._itemsOrdered) return false;
-    if(_productName != Product._productName) return false;
+    if(_itemsOrdered != Product._itemsOrdered
+    || _productName  != Product._productName) return false;
     return true;
 }
 
 //Inequality Operator Overload
 bool ProductOrder::operator!=(const ProductOrder& Product) const {
-    if(_itemsOrdered != Product._itemsOrdered) return true;
-    if(_productName != Product._productName) return true;
+    if(_itemsOrdered != Product._itemsOrdered
+    || _productName  != Product._productName) return true;
     return false;
 }
 
@@ -105,7 +105,7 @@ ProductOrder& ProductOrder::operator++() {
 
 //Post-Increment Operator Overload
 ProductOrder ProductOrder::operator++(int) {
-    ProductOrder temp(_productName, _itemsOrdered);
+    ProductOrder temp = *this;
     _itemsOrdered++;
     return temp;
 }
@@ -119,7 +119,7 @@ ProductOrder& ProductOrder::operator--() {
 //Post-Decrement Operator Overload
 ProductOrder ProductOrder::operator--(int) {
     if(_itemsOrdered < 1) return *this;
-    ProductOrder temp(_productName, _itemsOrdered);
+    ProductOrder temp = *this;
     _itemsOrdered--;
     return temp;
 }
