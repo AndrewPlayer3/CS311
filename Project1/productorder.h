@@ -21,7 +21,7 @@ private:
 
 public:
 
-    //Constructors
+    //Constructors:
     
     ProductOrder();
     ProductOrder(const ProductOrder&  Product);
@@ -30,7 +30,7 @@ public:
    ~ProductOrder();
 
 
-    //Members
+    //Members:
      
     std::string getName  () const;
     int         getNumber() const;
@@ -40,7 +40,7 @@ public:
     std::string toString () const;
     
 
-    //Overloads
+    //Overloads:
     
     ProductOrder& operator= (const ProductOrder&  Product);
     ProductOrder& operator= (const ProductOrder&& Product);
@@ -51,7 +51,6 @@ public:
     ProductOrder& operator--();
     ProductOrder  operator--(int);
     friend std::ostream& operator<<(std::ostringstream& output, const ProductOrder& Product);
-
 };
 
 #endif
