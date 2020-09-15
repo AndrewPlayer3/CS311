@@ -17,7 +17,7 @@
                              // We write our own main
 #define DOCTEST_CONFIG_SUPER_FAST_ASSERTS
                              // Reduce compile time
-#include "doctest.h"         // For doctest
+#include "doctest-master/doctest/doctest.h"         // For doctest
 
 // Includes for all test programs
 #include <iostream>
