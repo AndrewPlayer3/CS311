@@ -25,7 +25,7 @@ public:
     typedef std::size_t size_type;
 
     MSArray();
-    MSArray(const MSArray<T>& array);
+    MSArray(const MSArray<T>&  array);
     MSArray(const MSArray<T>&& array);
     MSArray(const std::size_t& size );
     MSArray(const std::size_t& size, const T& fill);
@@ -33,8 +33,6 @@ public:
 
     auto end() const;
     auto begin() const;
-    auto end();
-    auto begin();
     std::size_t size() const;
 
     MSArray<T>& operator=(const MSArray<T>&  array);
@@ -55,6 +53,10 @@ template<typename T>
 MSArray<T>::MSArray() {
     _size = 8;
     _data = new T[_size];
+    T temp;
+    for(int i = 0; i < _size; i++) {
+        _data[i] = temp;
+    }
 }
 
 template<typename T>
@@ -73,13 +75,17 @@ template<typename T>
 MSArray<T>::MSArray(const std::size_t& size ) {
     _size = size;
     _data = new T[_size];
+    T temp;
+    for(int i = 0; i < _size; i++) {
+        _data[i] = temp;
+    }
 }
 
 template<typename T>
 MSArray<T>::MSArray(const std::size_t& size, const T& fill) {
     _size = size;
     _data = new T[_size];
-    for(int i = 0; i < size; i++) {
+    for(int i = 0; i < _size; i++) {
         _data[i] = fill;
     }
 }
@@ -87,16 +93,6 @@ MSArray<T>::MSArray(const std::size_t& size, const T& fill) {
 template<typename T>
 MSArray<T>::~MSArray() {
     
-}
-
-template<typename T>
-auto MSArray<T>::end() {
-    return &_data[_size - 1];
-}
-
-template<typename T>
-auto MSArray<T>::begin() {
-    return &_data[0];
 }
 
 template<typename T>
