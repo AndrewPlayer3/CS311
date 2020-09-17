@@ -26,17 +26,19 @@ public:
 
     MSArray();
     MSArray(const MSArray<T>&  array);
-    MSArray(const MSArray<T>&& array);
+    MSArray(      MSArray<T>&& array) noexcept;
     MSArray(const std::size_t& size );
     MSArray(const std::size_t& size, const T& fill);
    ~MSArray(); 
 
-    auto end() const;
-    auto begin() const;
-    std::size_t size() const;
+          T*    end  ();
+          T*    begin();
+    const T*    end  () const;
+    const T*    begin() const;
+    std::size_t size () const;
 
     MSArray<T>& operator=(const MSArray<T>&  array);
-    MSArray<T>& operator=(const MSArray<T>&& array);
+    MSArray<T>& operator=(MSArray<T>&& array) noexcept;
 
     T&   operator[](const std::size_t& location) const;
     
@@ -53,32 +55,26 @@ template<typename T>
 MSArray<T>::MSArray() {
     _size = 8;
     _data = new T[_size];
-    T temp;
-    for(int i = 0; i < _size; i++) {
-        _data[i] = temp;
-    }
 }
 
 template<typename T>
 MSArray<T>::MSArray(const MSArray<T>& array) {
     _size = array._size;
-    _data = array._data;
+    _data = new T[_size];
+    std::copy(array.begin(), array.end(), begin());
 }
 
 template<typename T>
-MSArray<T>::MSArray(const MSArray<T>&& array) {
+MSArray<T>::MSArray(MSArray<T>&& array) noexcept{
     _size = array._size;
     _data = array._data;
+    array._data = nullptr;
 }
 
 template<typename T>
 MSArray<T>::MSArray(const std::size_t& size ) {
     _size = size;
     _data = new T[_size];
-    T temp;
-    for(int i = 0; i < _size; i++) {
-        _data[i] = temp;
-    }
 }
 
 template<typename T>
@@ -92,16 +88,26 @@ MSArray<T>::MSArray(const std::size_t& size, const T& fill) {
 
 template<typename T>
 MSArray<T>::~MSArray() {
-    
+    delete [] _data;
 }
 
 template<typename T>
-auto MSArray<T>::end() const {
-    return &_data[_size - 1];
+T* MSArray<T>::end() {
+    return &_data[_size];
 }
 
 template<typename T>
-auto MSArray<T>::begin() const {
+T* MSArray<T>::begin() {
+    return &_data[0];
+}
+
+template<typename T>
+const T* MSArray<T>::end() const {
+    return &_data[_size];
+}
+
+template<typename T>
+const T* MSArray<T>::begin() const {
     return &_data[0];
 }
 
@@ -111,16 +117,17 @@ std::size_t MSArray<T>::size() const {
 }
 
 template<typename T>
-MSArray<T>& MSArray<T>::operator=(const MSArray<T>&  array) {
-    _size = array._size;
-    _data = array._data;
+MSArray<T>& MSArray<T>::operator=(const MSArray<T>&  array){
+    MSArray<T> temp(array);
+    std::swap(_size, temp._size);
+    std::swap(_data, temp._data);
     return *this;
 }
 
 template<typename T>
-MSArray<T>& MSArray<T>::operator=(const MSArray<T>&& array) {
-    _size = array._size;
-    _data = array._data;
+MSArray<T>& MSArray<T>::operator=(MSArray<T>&& array) noexcept{
+    std::swap(_size, array._size);
+    std::swap(_data, array._data);
     return *this;
 }
 
@@ -149,25 +156,27 @@ T& MSArray<T>::operator[](const std::size_t& location) const {
     return _data[0];
 }
 
+
 template<typename T>
 bool MSArray<T>::operator< (const MSArray<T>& array) const {
-    if(_size > array._size) return false;
-    if(_size == array._size) {
-        for(int i = 0; i < _size; i++) {
-            if(!(_data[i] < array._data[i]) 
-            && !(array._data[i] < _data[i])) continue;
-            if(_data[i] <  array._data[i]) return true;
-            else return false;
-        }
+    int smallerSize = (_size < array._size) ? _size : array._size;
+    for(int i = 0; i < smallerSize; i++) {
+        // If _data[i] == array._data[i] 
+        if(!(_data[i] < array._data[i]) 
+        && !(array._data[i] < _data[i])) continue;
+        
+        if(_data[i] <  array._data[i]) return true;
+        else return false;
     }
     if(_size < array._size) return true;
     return false;
 }
 
+
 template<typename T>
 bool MSArray<T>::operator>(const MSArray<T>& array) const {
     if(!(*this < array)
-    && !(!(*this < array) && !(array < *this))) {
+    && !(!(*this < array) && !(array < *this))) { // !(*this == array)
         return true;
     }
     return false;
@@ -176,6 +185,8 @@ bool MSArray<T>::operator>(const MSArray<T>& array) const {
 template<typename T>
 bool MSArray<T>::operator<=(const MSArray<T>& array) const {
     if(*this < array) return true; 
+    
+    // *this == array
     if(!(*this < array) && !(array < *this)) return true;
     return false;
 }
@@ -183,6 +194,8 @@ bool MSArray<T>::operator<=(const MSArray<T>& array) const {
 template<typename T>
 bool MSArray<T>::operator>=(const MSArray<T>& array) const {
     if(*this > array) return true;
+    
+    // *this == array
     if(!(*this < array) && !(array < *this)) return true;
     return false;
 }
