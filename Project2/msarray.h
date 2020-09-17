@@ -140,64 +140,64 @@ T& MSArray<T>::operator[](const std::size_t& location) const {
 }
 
 template <typename T>
-bool operator==(const MSArray<T>& a1, const MSArray<T>& a2) {
-    if(a1.size() != a2.size()) return false;
-    for(int i = 0; i < a1.size(); i++) {
-        if(*(a1.begin() + i) != *(a2.begin() + i)) return false;
+bool operator==(const MSArray<T>& a, const MSArray<T>& b) {
+    if(a.size() != b.size()) return false;
+    for(int i = 0; i < a.size(); i++) {
+        if(*(a.begin() + i) != *(b.begin() + i)) return false;
     }
     return true;
 }
 
 template <typename T>
-bool operator!=(const MSArray<T>& a1, const MSArray<T>& a2) {
-    return !(a1 == a2);
+bool operator!=(const MSArray<T>& a, const MSArray<T>& b) {
+    return !(a == b);
 }
 
 template <typename T>
-bool operator<(const MSArray<T>& a1, const MSArray<T>& a2) {
+bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
     // We only need to loop over the smallest number of elements
-    int a1size = a1.size();
-    int a2size = a2.size(); 
-    int smallerSize = (a1size < a2size) ? a1size : a2size;
+    int asize = a.size();
+    int bsize = b.size(); 
+    int smallerSize = (asize < bsize) ? asize : bsize;
     
     for(int i = 0; i < smallerSize; i++) {
         
         // If _data[i] == array._data[i] skip this iteration
-        if(!(*(a1.begin() + i) < *(a2.begin() + i)) 
-        && !(*(a2.begin() + i) < *(a1.begin() + i))) continue;
+        if(!(*(a.begin() + i) < *(b.begin() + i)) 
+        && !(*(b.begin() + i) < *(a.begin() + i))) continue;
         
-        if(*(a1.begin() + i) <  *(a2.begin() + i)) return true;
+        if(*(a.begin() + i) <  *(b.begin() + i)) return true;
         else return false;
     }
 
     // If we are here, the arrays are equivalent up to _data[smallerSize]
     // so the (this) is smaller iff _size < array._size. 
-    if(a1size < a2size) return true;
+    if(asize < bsize) return true;
     return false;
 }
 
 template <typename T>
-bool operator>(const MSArray<T>& a1, const MSArray<T>& a2) {
-    if(!(a1 < a2)
-    && !(!(a1 < a2) && !(a2 < a1))) { // !(*this == array)
+bool operator>(const MSArray<T>& a, const MSArray<T>& b) {
+    if(!(a < b)
+    && !(!(a < b) && !(b < a))) { // !(*this == array)
         return true;
     }
     return false;
 }
 
 template <typename T>
-bool operator<=(const MSArray<T>& a1, const MSArray<T>& a2) {
-    if(a1 < a2) return true; 
+bool operator<=(const MSArray<T>& a, const MSArray<T>& b) {
+    if(a < b) return true; 
     
     // *this == array
-    if(!(a1 < a2) && !(a2 < a1)) return true;
+    if(!(a < b) && !(b < a)) return true;
     return false;
 }
 
 template <typename T>
-bool operator>=(const MSArray<T>& a1, const MSArray<T>& a2) {
-    if(a1 < a2) return false; 
+bool operator>=(const MSArray<T>& a, const MSArray<T>& b) {
+    if(a < b) return false; 
     return true;
 }
 
