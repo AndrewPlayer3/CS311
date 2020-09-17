@@ -132,11 +132,10 @@ MSArray<T>& MSArray<T>::operator=(MSArray<T>&& array) noexcept{
     return *this;
 }
 
-// Precondition: location >= 0 (throw if location < 0)
+// Precondition: location >= 0
 template<typename T>
 T& MSArray<T>::operator[](const std::size_t& location) const {
-    if(location >= 0 && location < _size) return _data[location];
-    else throw "Attempted to pass a negative array location";
+    return _data[location];
 }
 
 template <typename T>
