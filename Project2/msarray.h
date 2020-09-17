@@ -143,6 +143,7 @@ template <typename T>
 bool operator==(const MSArray<T>& a, const MSArray<T>& b) {
     if(a.size() != b.size()) return false;
     for(int i = 0; i < a.size(); i++) {
+        // if a[i] != b[i] return false
         if(*(a.begin() + i) != *(b.begin() + i)) return false;
     }
     return true;
