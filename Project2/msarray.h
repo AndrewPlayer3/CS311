@@ -14,6 +14,8 @@
 template<typename T>
 class MSArray {
 
+//Invariants: _size >= 0
+
 private:
     
     std::size_t _size;
@@ -36,20 +38,21 @@ public:
     const T*    end  () const;
     const T*    begin() const;
     std::size_t size () const;
+    void        mswap(MSArray<T>& array);
 
     MSArray<T>& operator=(const MSArray<T>&  array);
-    MSArray<T>& operator=(MSArray<T>&& array) noexcept;
+    MSArray<T>& operator=(      MSArray<T>&& array) noexcept;
 
     T&   operator[](const std::size_t& location) const;
     
-    bool operator< (const MSArray<T>& array) const;
-    bool operator> (const MSArray<T>& array) const;
-    bool operator<=(const MSArray<T>& array) const;
-    bool operator>=(const MSArray<T>& array) const;
-    bool operator==(const MSArray<T>& array) const;
-    bool operator!=(const MSArray<T>& array) const;
-
+    //bool operator< (const MSArray<T>& array) const;
+    //bool operator> (const MSArray<T>& array) const;
+    //bool operator<=(const MSArray<T>& array) const;
+    //bool operator>=(const MSArray<T>& array) const;
+    //bool operator==(const MSArray<T>& array) const;
+    //bool operator!=(const MSArray<T>& array) const;
 };
+
 
 template<typename T>
 MSArray<T>::MSArray() {
@@ -68,6 +71,7 @@ template<typename T>
 MSArray<T>::MSArray(MSArray<T>&& array) noexcept{
     _size = array._size;
     _data = array._data;
+    array._size = 0;
     array._data = nullptr;
 }
 
@@ -117,20 +121,33 @@ std::size_t MSArray<T>::size() const {
 }
 
 template<typename T>
+void MSArray<T>::mswap(MSArray<T>& array) {
+    std::swap(_size, array._size);
+    std::swap(_data, array._data);
+}
+
+template<typename T>
 MSArray<T>& MSArray<T>::operator=(const MSArray<T>&  array){
     MSArray<T> temp(array);
-    std::swap(_size, temp._size);
-    std::swap(_data, temp._data);
+    mswap(temp);
     return *this;
 }
 
 template<typename T>
 MSArray<T>& MSArray<T>::operator=(MSArray<T>&& array) noexcept{
-    std::swap(_size, array._size);
-    std::swap(_data, array._data);
+    mswap(array);
     return *this;
 }
 
+
+// Precondition: location >= 0 (throw if location < 0)
+template<typename T>
+T& MSArray<T>::operator[](const std::size_t& location) const {
+    if(location >= 0 && location < _size) return _data[location];
+    else throw "Attempted to pass a negative array location";
+}
+
+/*
 template<typename T>
 bool MSArray<T>::operator==(const MSArray<T>& array) const {
     if(_size != array._size) return false;
@@ -149,29 +166,29 @@ bool MSArray<T>::operator!=(const MSArray<T>& array) const {
     return false;
 }
 
-template<typename T>
-T& MSArray<T>::operator[](const std::size_t& location) const {
-    if(location >= 0 && location < _size) return _data[location];
-    else std::cout << "ERROR HERE" << std::endl;
-    return _data[0];
-}
-
-
+// I could have just used std::lexigraphical_order(begin(), end(), array.begin(), array.end())
+// but I wanted to do it myself.
 template<typename T>
 bool MSArray<T>::operator< (const MSArray<T>& array) const {
+    
+    // We only need to loop over the smallest number of elements 
     int smallerSize = (_size < array._size) ? _size : array._size;
+    
     for(int i = 0; i < smallerSize; i++) {
-        // If _data[i] == array._data[i] 
+        
+        // If _data[i] == array._data[i] skip this iteration
         if(!(_data[i] < array._data[i]) 
         && !(array._data[i] < _data[i])) continue;
         
         if(_data[i] <  array._data[i]) return true;
         else return false;
     }
+
+    // If we are here, the arrays are equivalent up to _data[smallerSize]
+    // so the (this) is smaller iff _size < array._size. 
     if(_size < array._size) return true;
     return false;
 }
-
 
 template<typename T>
 bool MSArray<T>::operator>(const MSArray<T>& array) const {
@@ -198,6 +215,69 @@ bool MSArray<T>::operator>=(const MSArray<T>& array) const {
     // *this == array
     if(!(*this < array) && !(array < *this)) return true;
     return false;
+}
+*/
+
+template <typename T>
+bool operator==(const MSArray<T>& a1, const MSArray<T>& a2) {
+    if(a1.size() != a2.size()) return false;
+    for(int i = 0; i < a1.size(); i++) {
+        if(*(a1.begin() + i) != *(a2.begin() + i)) return false;
+    }
+    return true;
+}
+
+template <typename T>
+bool operator!=(const MSArray<T>& a1, const MSArray<T>& a2) {
+    return !(a1 == a2);
+}
+
+template <typename T>
+bool operator<(const MSArray<T>& a1, const MSArray<T>& a2) {
+    
+    // We only need to loop over the smallest number of elements
+    int a1size = a1.size();
+    int a2size = a2.size(); 
+    int smallerSize = (a1size < a2size) ? a1size : a2size;
+    
+    for(int i = 0; i < smallerSize; i++) {
+        
+        // If _data[i] == array._data[i] skip this iteration
+        if(!(*(a1.begin() + i) < *(a2.begin() + i)) 
+        && !(*(a2.begin() + i) < *(a1.begin() + i))) continue;
+        
+        if(*(a1.begin() + i) <  *(a2.begin() + i)) return true;
+        else return false;
+    }
+
+    // If we are here, the arrays are equivalent up to _data[smallerSize]
+    // so the (this) is smaller iff _size < array._size. 
+    if(a1size < a2size) return true;
+    return false;
+}
+
+template <typename T>
+bool operator>(const MSArray<T>& a1, const MSArray<T>& a2) {
+    if(!(a1 < a2)
+    && !(!(a1 < a2) && !(a2 < a1))) { // !(*this == array)
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+bool operator<=(const MSArray<T>& a1, const MSArray<T>& a2) {
+    if(a1 < a2) return true; 
+    
+    // *this == array
+    if(!(a1 < a2) && !(a2 < a1)) return true;
+    return false;
+}
+
+template <typename T>
+bool operator>=(const MSArray<T>& a1, const MSArray<T>& a2) {
+    if(a1 < a2) return false; 
+    return true;
 }
 
 #endif
