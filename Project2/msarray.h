@@ -153,6 +153,11 @@ bool operator!=(const MSArray<T>& a, const MSArray<T>& b) {
     return !(a == b);
 }
 
+template<typename T>
+bool isEqual(const T& a, const T& b) {
+    return !(a < b) && !(b < a);
+}
+
 template <typename T>
 bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
@@ -166,8 +171,7 @@ bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
         T aVal = *(a.begin() + i);
         T bVal = *(b.begin() + i);
 
-        // If a == b skip this iteration
-        if(!(aVal < bVal) && !(bVal < aVal)) continue;
+        if(isEqual(aVal, bVal)) continue;
 
         if(aVal <  bVal) return true;
         else return false;
@@ -181,8 +185,7 @@ bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
 
 template <typename T>
 bool operator>(const MSArray<T>& a, const MSArray<T>& b) {
-    if(!(a < b)
-    && !(!(a < b) && !(b < a))) { // !(*this == array)
+    if(!((a < b) || (isEqual(a, b)))) { // !(*this == array)
         return true;
     }
     return false;
@@ -190,10 +193,7 @@ bool operator>(const MSArray<T>& a, const MSArray<T>& b) {
 
 template <typename T>
 bool operator<=(const MSArray<T>& a, const MSArray<T>& b) {
-    if(a < b) return true; 
-    
-    // *this == array
-    if(!(a < b) && !(b < a)) return true;
+    if(a < b || isEqual(a, b)) return true; 
     return false;
 }
 
