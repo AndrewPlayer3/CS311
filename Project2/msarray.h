@@ -157,25 +157,25 @@ template <typename T>
 bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
     // We only need to loop over the smallest number of elements
-    int asize = a.size();
-    int bsize = b.size(); 
-    int smallerSize = (asize < bsize) ? asize : bsize;
+    int aSize = a.size();
+    int bSize = b.size(); 
+    int smallerSize = (aSize < bSize) ? aSize : bSize;
     
     for(int i = 0; i < smallerSize; i++) {
         
-        T aval = *(a.begin() + i);
-        T bval = *(b.begin() + i);
+        T aVal = *(a.begin() + i);
+        T bVal = *(b.begin() + i);
 
-        // If _data[i] == array._data[i] skip this iteration
-        if(!(aval < bval) && !(bval < aval)) continue;
-        
-        if(aval <  bval) return true;
+        // If a == b skip this iteration
+        if(!(aVal < bVal) && !(bVal < aVal)) continue;
+
+        if(aVal <  bVal) return true;
         else return false;
     }
 
-    // If we are here, the arrays are equivalent up to _data[smallerSize]
-    // so the (this) is smaller iff _size < array._size. 
-    if(asize < bsize) return true;
+    // If we are here, the arrays are equivalent up to a[smallerSize]
+    // so a is smaller iff a's size < b's size. 
+    if(aSize < bSize) return true;
     return false;
 }
 
