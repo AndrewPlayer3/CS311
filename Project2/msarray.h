@@ -142,8 +142,7 @@ template <typename T>
 bool operator==(const MSArray<T>& a, const MSArray<T>& b) {
     if(a.size() != b.size()) return false;
     for(int i = 0; i < a.size(); i++) {
-        // if a[i] != b[i] return false
-        if(*(a.begin() + i) != *(b.begin() + i)) return false;
+        if(a[i] != b[i]) return false;
     }
     return true;
 }
@@ -158,6 +157,8 @@ bool isEqual(const T& a, const T& b) {
     return !(a < b) && !(b < a);
 }
 
+// Could have used std::lexigraphical_order(a.begin(), a.end(), b.begin(), b.end()) 
+// but I wanted to implement it myself.
 template <typename T>
 bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
@@ -167,13 +168,8 @@ bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     int smallerSize = (aSize < bSize) ? aSize : bSize;
     
     for(int i = 0; i < smallerSize; i++) {
-        
-        T aVal = *(a.begin() + i);
-        T bVal = *(b.begin() + i);
-
-        if(isEqual(aVal, bVal)) continue;
-
-        if(aVal <  bVal) return true;
+        if(isEqual(a[i], b[i])) continue;
+        if(a[i] <  b[i]) return true;
         else return false;
     }
 
@@ -185,7 +181,7 @@ bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
 
 template <typename T>
 bool operator>(const MSArray<T>& a, const MSArray<T>& b) {
-    if(!((a < b) || (isEqual(a, b)))) { // !(*this == array)
+    if(!((a < b) || (isEqual(a, b)))) {
         return true;
     }
     return false;
