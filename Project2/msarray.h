@@ -163,11 +163,13 @@ bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
     for(int i = 0; i < smallerSize; i++) {
         
+        T aval = *(a.begin() + i);
+        T bval = *(b.begin() + i);
+
         // If _data[i] == array._data[i] skip this iteration
-        if(!(*(a.begin() + i) < *(b.begin() + i)) 
-        && !(*(b.begin() + i) < *(a.begin() + i))) continue;
+        if(!(aval < bval) && !(bval < aval)) continue;
         
-        if(*(a.begin() + i) <  *(b.begin() + i)) return true;
+        if(aval <  bval) return true;
         else return false;
     }
 
