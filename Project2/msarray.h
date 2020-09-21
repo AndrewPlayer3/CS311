@@ -11,15 +11,21 @@
 #include <iostream>
 #include <typeinfo>
 
+// Purpose: This is a class that implements a basic semi-smart templated Array.
+
 template<typename T>
 class MSArray {
 
 //Invariants: _size >= 0
+//Requirments: For == to work, value_type must have == overloaded. 
+//For other comparisons to work, besides !=, it must have < overloaded
 
 private:
     
     std::size_t _size;
     T* _data;
+
+    void mswap(MSArray<T>& array);
 
 public:
 
@@ -33,17 +39,16 @@ public:
     MSArray(const std::size_t& size, const T& fill);
    ~MSArray(); 
 
+    MSArray<T>& operator=(const MSArray<T>&  array);
+    MSArray<T>& operator=(      MSArray<T>&& array) noexcept;
+
+    T&   operator[](const std::size_t& location) const;
+
           T*    end  ();
           T*    begin();
     const T*    end  () const;
     const T*    begin() const;
     std::size_t size () const;
-    void        mswap(MSArray<T>& array);
-
-    MSArray<T>& operator=(const MSArray<T>&  array);
-    MSArray<T>& operator=(      MSArray<T>&& array) noexcept;
-
-    T&   operator[](const std::size_t& location) const;
 };
 
 
@@ -157,8 +162,6 @@ bool isEqual(const T& a, const T& b) {
     return !(a < b) && !(b < a);
 }
 
-// Could have used std::lexigraphical_order(a.begin(), a.end(), b.begin(), b.end()) 
-// but I wanted to implement it myself.
 template <typename T>
 bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
@@ -169,34 +172,27 @@ bool operator<(const MSArray<T>& a, const MSArray<T>& b) {
     
     for(int i = 0; i < smallerSize; i++) {
         if(isEqual(a[i], b[i])) continue;
-        if(a[i] <  b[i]) return true;
-        else return false;
+        return (a[i] <  b[i]);
     }
 
     // If we are here, the arrays are equivalent up to a[smallerSize]
     // so a is smaller iff a's size < b's size. 
-    if(aSize < bSize) return true;
-    return false;
+    return aSize < bSize;
 }
 
 template <typename T>
 bool operator>(const MSArray<T>& a, const MSArray<T>& b) {
-    if(!((a < b) || (isEqual(a, b)))) {
-        return true;
-    }
-    return false;
+    return !((a < b) || (isEqual(a, b)));
 }
 
 template <typename T>
 bool operator<=(const MSArray<T>& a, const MSArray<T>& b) {
-    if(a < b || isEqual(a, b)) return true; 
-    return false;
+    return a < b || isEqual(a, b);
 }
 
 template <typename T>
 bool operator>=(const MSArray<T>& a, const MSArray<T>& b) {
-    if(a < b) return false; 
-    return true;
+    return !(a < b);
 }
 
 #endif
