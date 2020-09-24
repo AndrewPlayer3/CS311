@@ -34,9 +34,7 @@ void didItThrow(const function<void()> & ff,
 int gcd(int a,
         int b)
 {
-    if(b == 0) return a;
-    int temp = b;
-    b = a % b;
-    a = temp;
-    return gcd(a, b);
+    if(a == 0) return b;
+    if(a > b) return gcd(b, a);
+    else return gcd(b % a, a);
 }
