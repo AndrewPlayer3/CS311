@@ -21,7 +21,7 @@ ValueType lookup(const LLNode<ValueType> * head,
                  std::size_t index)
 {
     // Verify the LL is of size > 0 && has a positive index
-    if(index < 0 || head == nullptr) throw std::out_of_range("Invalid index in lookup function");
+    if(index < 0 || head == nullptr) throw std::out_of_range("Index below range in lookup function. LL size may be 0.");
        
     if(index == 0) return head->_data;
 
@@ -35,7 +35,7 @@ ValueType lookup(const LLNode<ValueType> * head,
         i++;
     }
 
-    if(traveler == nullptr) throw std::out_of_range("Invalid index in lookup function");
+    if(traveler == nullptr) throw std::out_of_range("Index above range in lookup.");
 
     return traveler->_data;
 }
