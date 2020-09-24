@@ -10,7 +10,9 @@
 #include <functional>
 using std::function;
 
-
+// Try/Catch based on whether ff() throws.
+// Sets threw based on if the function throws.
+// Passes the exception if one arises.
 void didItThrow(const function<void()> & ff,
                 bool & threw)
 {
@@ -30,7 +32,7 @@ void didItThrow(const function<void()> & ff,
     }
 }
 
-
+// Compute GCD based on Euclidean Algorithm
 int gcd(int a,
         int b)
 {

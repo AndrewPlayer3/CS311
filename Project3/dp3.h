@@ -28,7 +28,7 @@ ValueType lookup(const LLNode<ValueType> * head,
     std::size_t i = 0;
     LLNode<ValueType>* traveler = head->_next;
 
-    // Travel threw the LL until we reach our index or we hit the end    
+    // Travel through the LL until we reach our index or we hit the end    
     while(traveler != nullptr 
     && i < index - 1) {
         traveler = traveler->_next;
@@ -45,7 +45,8 @@ ValueType lookup(const LLNode<ValueType> * head,
 void didItThrow(const std::function<void()> & ff,
                 bool & threw);
 
-
+// Checks if the object is sorted in ascending order
+// using the < comparison.
 template <typename FDIter>
 bool checkSorted(FDIter first,
                  FDIter last)
