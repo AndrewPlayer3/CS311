@@ -22,7 +22,8 @@ ValueType lookup(const LLNode<ValueType> * head,
 {
     // Verify the LL is of size > 0 && has a positive index
     // If the LL is size 0, any integer for index is out of range. 
-    if(index < 0 || head == nullptr) throw std::out_of_range("Index below range in lookup function. LL size may be 0.");
+    if(index < 0 || head == nullptr) 
+        throw std::out_of_range("Index below range in lookup function. LL size may be 0.");
        
     if(index == 0) return head->_data;
 
