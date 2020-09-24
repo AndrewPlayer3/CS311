@@ -1,0 +1,72 @@
+/*
+ * Andrew Player
+ * CS311
+ * 09/24/2020
+ * Header for Project 3 
+*/
+
+#ifndef FILE_DP3_H_INCLUDED
+#define FILE_DP3_H_INCLUDED
+
+#include "llnode.h"    // For LLNode
+#include <cstddef>     // For std::size_t
+#include <functional>  // For std::function
+#include <algorithm>
+
+// Preconditions: Index should be > 0 and < size
+// This function iteratively traverses the LL until it reaches 
+// the index or it hits the end. Then it returns the data if possible. 
+template <typename ValueType>
+ValueType lookup(const LLNode<ValueType> * head,
+                 std::size_t index)
+{
+    // Verify the LL is of size > 0 && has a positive index
+    if(index < 0 || head == nullptr) throw std::out_of_range("Invalid index in lookup function");
+       
+    if(index == 0) return head->_data;
+
+    std::size_t i = 0;
+    LLNode<ValueType>* traveler = head->_next;
+
+    // Travel threw the LL until we reach our index or we hit the end    
+    while(traveler != nullptr 
+    && i < index - 1) {
+        traveler = traveler->_next;
+        i++;
+    }
+
+    if(traveler == nullptr) throw std::out_of_range("Invalid index in lookup function");
+
+    return traveler->_data;
+}
+
+
+// Implementation in source file
+void didItThrow(const std::function<void()> & ff,
+                bool & threw);
+
+
+template <typename FDIter>
+bool checkSorted(FDIter first,
+                 FDIter last)
+{
+    // Empty should return true
+    if(first == last) return true;
+ 
+    FDIter prev = first;
+    for(auto iter = ++first; iter != last; iter++) {
+        // If the current value is less than the last, it isn't sorted.
+        if(*iter < *prev) return false;
+        prev++;
+    }
+    
+    return true;
+}
+
+
+// Implementation in source file
+int gcd(int a,
+        int b);
+
+
+#endif  //#ifndef FILE_DP3_H_INCLUDED
