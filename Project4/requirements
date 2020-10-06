@@ -1,0 +1,104 @@
+CS 311 Fall 2020  >  Project 4
+CS 311 Fall 2020
+Project 4
+
+Project 4 is due at 5 pm Tuesday, October 6. It is worth 60 points.
+Procedures
+
+This project is to be done individually.
+
+Turn in answers to the exercises below on the UA Blackboard Learn site, under Project 4 for this class.
+
+    Your answers should consist of two files: counthsw.h, counthsw.cpp. These two files should be attached to your submission.
+    I may not look at your homework submission immediately. If you have questions, e-mail me.
+
+Exercises (60 pts total)
+Exercise A — Counting Holey Spider Walks
+Purpose
+
+In this exercise, you will write code that does recursive backtracking.
+
+This exercise does not emphasize implementation details and language features nearly as much as earlier programming exercises did. You still need to write high-quality code and follow the coding standards; however, this should be comparatively easy, for those that did a decent job on the previous projects.
+
+The key part of this exercise is the logic that the code must follow. When you do this exercise, it is probably worthwhile to spend more time planning, and less time coding, than you have before.
+Background
+
+See Thoughts on Project 4, in the Monday 9/28 slides, for an illustrated discussion of the background.
+
+Consider a rectangle divided into squares, like a checkerboard or chessboard. One square is marked as the hole. Another square is marked start, and a third square is marked finish. We will call the result a board.
+
+Coordinates of squares on the board are zero-based. So
+-coordinates of squares are in the range to , where is the dimension of the board. And similarly for
+
+-coordinates.
+
+Place a spider on the start square. The spider can step to an adjacent square on the board: north, south, east, west, or any of the four diagonal directions. It does this repeatedly until it reaches the finish square. A way of doing this that does not step on the hole, and steps on each other square exactly once, is a holey spider walk.
+Instructions
+
+This project is to be done individually.
+
+Write a C++ package that counts the number of holey spider walks on a given board.
+
+Be sure to follow the coding standards. The following standards from part 4 now apply.
+
+Standard 4A
+    Requirements on template parameter types must be documented.
+Standard 4B
+    If a function is not a template and not a member of a class template, then the exceptions it throws must be documented.
+
+You do not need to follow standards 4C or 4D.
+
+    Your package should be contained in files counthsw.h and counthsw.cpp.
+    The public interface of this package consists of a single function: countHSW, which returns the number of holey spider walks on a given board (details below).
+    Function countHSW should do the bulk of its work via a call to a function countHSW_recurse, which is a function (global or member) that counts the number of holey spider walks based on a given partial solution, using recursive backtracking.
+        Note: Function countHSW_recurse is not part of the public interface of the package. Prototype and implement it however you want; I will not test it. However, it must exist, do recursive bcktracking, be used by countHSW to do most of the required computational work, and perform the correct computations for the partial solution it is given. It must also follow the applicable coding standards.
+
+Here are the details for function countHSW.
+
+    It should be prototyped as
+
+        int countHSW(int dim_x, int dim_y,
+                     int hole_x, int hole_y,
+                     int start_x, int start_y,
+                     int finish_x, int finish_y);
+
+    The first two parameters are the dimensions of the board: 
+
+and
+. Following are the coordinates of the hole, the start square, and the finish square. Thus, we must have 0 <= hole_x < dim_x, and 0 <= hole_y < dim_y, and similarly for the start and finish coordinates.
+For legal parameter values, function countHSW returns the number of holey spider walks on a dim_x × dim_y board with hole at (hole_x, hole_y) and start and finish squares similarly at the specified locations.
+
+    So, as in the first example in the slides, countHSW(4,2, 1,0, 0,0, 3,1) should return 4.
+
+The function should work properly for all meaningful parameter values.
+
+    The test program will only call function countHSW with parameter values that make sense. In particular, dim_x and dim_y will always be positive, and the hole, start, and finish squares will be distinct and will lie on the board.
+    Your documentation should include information about what parameter values the function will accept (preconditions!).
+
+The function should execute in a reasonable amount time—say, less than two minutes on a recent machine—whenever (a) the total number of squares on the board is at most
+, or (b) either dim_x or dim_y is , and the other is at most . Do not expect your function to execute in a reasonable time for larger values. For example, if you make the board
+
+    . then be prepared to wait a long time for an answer.
+
+Test Program
+
+A test program is available: counthsw_test.cpp. If you compile and run the test program (unmodified!) with your code, then it will test whether your code works properly.
+
+The test program requires doctest.h, the header for the doctest unit-testing framework, version 2.
+
+Do not turn in the test program or the doctest framework.
+Notes
+
+    When your homework is graded, function countHSW may be called with different parameters from those in the test program.
+    The test program does not check whether function countHSW_recurse meets the requirements of the project; nor does it check whether your code is fast enough.
+    Your function is only required to be reasonably fast for boards with at most 
+
+squares, or with either the or dimension being
+
+    . However, it is still required to work for larger boards—assuming no stack overflow. Do not arbitrarily limit the size of a board!
+
+What about Speed?
+
+This exercise emphasizes logic, not efficiency. For grading purposes, running in a reasonable time is all I ask; you will not be given extra credit for super-fast code.
+
+However, for those who like a challenge, once you get your code working, see how fast you can get it to run. I will do timing tests on all working implementations; the names of top performers will be announced in class some time after the homework is graded.
