@@ -18,6 +18,7 @@
 #define DOCTEST_CONFIG_SUPER_FAST_ASSERTS
                              // Reduce compile time
 #include "doctest.h"         // For doctest
+#include "chrono"
 
 // Includes for all test programs
 #include <iostream>
@@ -232,9 +233,13 @@ int main(int argc,
         // Run test suites
         std::cout << "BEGIN tests for "
                   << tname << std::endl << std::endl;
+        auto start = std::chrono::system_clock::now();
         dtresult = dtcontext.run();
+        auto end = std::chrono::system_clock::now();
         std::cout << "END tests for "
                   << tname << std::endl << std::endl;
+        auto elapsed = end - start;
+        std::cout << "Time: " << elapsed.count() << std::endl;
     }
 
     // If we want to do something else here, then we need to check
