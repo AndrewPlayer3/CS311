@@ -231,14 +231,15 @@ int main(int argc,
     if (!dtresult)           // Continue only if no command-line error
     {
         // Run test suites
+        std::chrono::time_point<std::chrono::system_clock> start, end; 
         std::cout << "BEGIN tests for "
                   << tname << std::endl << std::endl;
-        auto start = std::chrono::system_clock::now();
+        start = std::chrono::system_clock::now();
         dtresult = dtcontext.run();
-        auto end = std::chrono::system_clock::now();
+        end = std::chrono::system_clock::now();
         std::cout << "END tests for "
                   << tname << std::endl << std::endl;
-        auto elapsed = end - start;
+        std::chrono::duration<double> elapsed = end - start;
         std::cout << "Time: " << elapsed.count() << std::endl;
     }
 
