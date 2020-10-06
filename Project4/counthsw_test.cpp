@@ -247,4 +247,3 @@ int main(int argc,
     // Program return value is return code from doctest
     return dtresult;
 }
-

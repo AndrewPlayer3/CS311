@@ -9,6 +9,9 @@
 #define COUNTHSW_H_
 
 #include <iostream>
+#include <vector>
+
+int countHSW_recurse(std::vector<std::vector<int>> board, int cur_x, int cur_y, int squares_left);
 
 int countHSW(int dim_x, int dim_y,
              int hole_x, int hole_y,
