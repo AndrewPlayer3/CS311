@@ -1,11 +1,10 @@
 main
 test
 main.cpp
-productorder_test.cpp
-msarray_test.cpp
 msarray
 doctest-master
 settings.json
 .DS_STORE
 launch.json
 tasks.json
+*.exe
