@@ -7,15 +7,15 @@
 
 #include "counthsw.h"
 
-int countHSW_recurse(std::vector<std::vector<int>>& board, int cur_x, int cur_y, int finish_x, int finish_y, int squares_left) {   
+int countHSW_recurse(std::vector<std::vector<int>>& board, int dim_x, int dim_y, int cur_x, int cur_y, int finish_x, int finish_y, int squares_left) {   
 
     // Test for valid location
     if(cur_x < 0 || cur_y < 0
-      || cur_x > board.size() - 1
-      || cur_y > board[0].size() - 1
+      || cur_x > dim_x - 1
+      || cur_y > dim_y - 1
       || board[cur_x][cur_y] == 1) return 0;
     board[cur_x][cur_y] = 1;
-    
+
     // Test for complete solution
     if(cur_x == finish_x && cur_y == finish_y
            && squares_left == 0) {
@@ -51,7 +51,7 @@ int countHSW_recurse(std::vector<std::vector<int>>& board, int cur_x, int cur_y,
 
             squares_left--;
             
-            total += countHSW_recurse(board, cur_x, cur_y, finish_x, finish_y, squares_left);
+            total += countHSW_recurse(board, dim_x, dim_y, cur_x, cur_y, finish_x, finish_y, squares_left);
             
             // Restore the variables.
             board[cur_x][cur_y] = 0;
@@ -75,7 +75,7 @@ int countHSW(int dim_x, int dim_y,
     std::vector<std::vector<int>> board(dim_x, std::vector<int>(dim_y, 0));
     board[hole_x][hole_y] = 1; 
     int squares_left = dim_x*dim_y-2;
-    int count = countHSW_recurse(board, start_x, start_y, finish_x, finish_y, squares_left);                                                                         
+    int count = countHSW_recurse(board, dim_x, dim_y, start_x, start_y, finish_x, finish_y, squares_left);                                                                         
     return count;
 
 }                
