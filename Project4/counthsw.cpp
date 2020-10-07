@@ -15,6 +15,10 @@ int countHSW_recurse(std::vector<std::vector<int>>& board, int dim_x, int dim_y,
       || cur_y > dim_y - 1
       || board[cur_x][cur_y] == 1) return 0;
     
+    // Done but not a complete solution
+    if(cur_x == finish_x && cur_y == finish_y
+    && squares_left > 0) return 0;
+
     board[cur_x][cur_y] = 1;
 
     // Test for complete solution
