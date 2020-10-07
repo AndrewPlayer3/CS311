@@ -14,6 +14,7 @@ int countHSW_recurse(std::vector<std::vector<int>>& board, int dim_x, int dim_y,
       || cur_x > dim_x - 1
       || cur_y > dim_y - 1
       || board[cur_x][cur_y] == 1) return 0;
+    
     board[cur_x][cur_y] = 1;
 
     // Test for complete solution
@@ -41,8 +42,8 @@ int countHSW_recurse(std::vector<std::vector<int>>& board, int dim_x, int dim_y,
             
             // Test the place here to save a recursive call.
             if(cur_x < 0 || cur_y < 0
-            || cur_x > board.size() - 1
-            || cur_y > board[0].size() - 1
+            || cur_x > dim_x - 1
+            || cur_y > dim_y - 1
             || board[cur_x][cur_y] == 1) {
                 cur_x = temp_x;
                 cur_y = temp_y;
