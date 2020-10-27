@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <algorithm>
 
 #ifndef __TFSARRAY_H_
 #define __TFSARRAY_H_
@@ -20,17 +21,17 @@ public:
 public:
 
     TFSArray<value_type> ():
-        _size(0), _arr(new value_type[0]) {}
-    TFSArray<value_type> (const size_type size):
-        _size(size), _arr(new value_type[size]) {}
+        _size(0), _arr(new value_type[0]), _capacity(0) {}
+    TFSArray<value_type> (const size_type& size);
     TFSArray<value_type> (const TFSArray<value_type>& arr);
     TFSArray<value_type> (TFSArray<value_type>&& arr) noexcept;
+   ~TFSArray<value_type>();
 
     TFSArray<value_type>& operator=(const TFSArray<value_type>& arr);
-    TFSArray<value_type>& operator=(TFSArray<value_type>&& arr);
+    TFSArray<value_type>& operator=(TFSArray<value_type>&& arr) noexcept;
 
-    value_type& operator[](const size_type location);
-    const value_type& operator[](const size_type location) const;
+    value_type& operator[](const size_type& location);
+    const value_type& operator[](const size_type& location) const;
 
     size_type size() const;
     bool empty() const;
@@ -47,29 +48,49 @@ public:
 
 private:
     void _swap(TFSArray<value_type>& arr);
-
     size_type _size;
+    size_type _capacity;
     value_type* _arr;
 };
 
 template<typename value_type>
+TFSArray<value_type>::~TFSArray() {
+    
+}
+
+template<typename value_type>
 void TFSArray<value_type>::_swap(TFSArray<value_type>& arr) {
     std::swap(_size, arr._size);
-    std::swap(_arr, arr._arr);
+    std::swap(_capacity, arr._capacity);
+    for(int i = 0; i < _size; i++) {
+        value_type temp = _arr[i];
+        _arr[i] = arr._arr[i];
+        arr._arr[i] = temp;
+    }
+}
+
+template<typename value_type>
+TFSArray<value_type>::TFSArray(const size_type& size) {
+    _size = size;
+    _capacity = 2*size;
+    _arr = new value_type[_capacity];
 }
 
 template<typename value_type>
 TFSArray<value_type>::TFSArray(const TFSArray<value_type>& arr) {
     _size = arr._size;
-    _arr = new value_type(_size);
+    _capacity = arr._capacity;
+    _arr = new value_type[_capacity];
     std::copy(arr.begin(), arr.end(), begin());
 }
 
 template<typename value_type>
 TFSArray<value_type>::TFSArray(TFSArray<value_type>&& arr) noexcept {
+    _capacity = arr._capacity;
     _size = arr._size;
     _arr = arr._arr;
     arr._size = 0;
+    arr._capacity = 0;
     arr._arr = nullptr;
 }
 
@@ -81,18 +102,18 @@ TFSArray<value_type>& TFSArray<value_type>::operator=(const TFSArray<value_type>
 }
 
 template<typename value_type>
-TFSArray<value_type>& TFSArray<value_type>::operator=(TFSArray<value_type>&& arr) {
+TFSArray<value_type>& TFSArray<value_type>::operator=(TFSArray<value_type>&& arr) noexcept {
     _swap(arr);
     return *this;
 }
 
 template<typename value_type>
-value_type& TFSArray<value_type>::operator[](const size_type location) {
+value_type& TFSArray<value_type>::operator[](const size_type& location) {
     return _arr[location];
 }
 
 template<typename value_type>
-const value_type& TFSArray<value_type>::operator[](const size_type location) const {
+const value_type& TFSArray<value_type>::operator[](const size_type& location) const {
     return _arr[location];
 }
 
@@ -108,18 +129,41 @@ bool TFSArray<value_type>::empty() const {
 
 template<typename value_type>
 void TFSArray<value_type>::resize(const size_type& size) {
-    value_type* arr = new value_type(size);
-    for(int i = 0; i < (_size < size ? _size : size); i++) {
-        arr[i] = _arr[i];
+    if(size > _capacity) {
+        TFSArray<value_type> temp(size);
+        std::copy(begin(), end(), temp.begin());
+        _swap(temp);
+    } else {
+        _size = size;
     }
-    _arr = arr;
-    _size = size;
 }
 
 template<typename value_type>
 value_type* TFSArray<value_type>::insert(TFSArray<value_type>::iterator it, const value_type& val) {
-    *it = val;
-    return it;
+    size_type location = it - begin();
+    push_back(val);
+    if(it == end()) {
+        return end();
+    }
+    std::rotate(it, end()-1, end());
+    return begin() + location;
+}
+
+template<typename value_type>
+value_type* TFSArray<value_type>::erase(iterator it) {
+    if(it == end()) {
+        _size--;
+        return end();
+    }
+    size_type next_location = it - begin();
+    iterator next = it + 1;
+    while(it < end()) {
+        *it = *next;
+        it++;
+        next++;
+    }
+    _size--;
+    return begin() + next_location;
 }
 
 template<typename value_type>
@@ -158,14 +202,12 @@ void TFSArray<value_type>::push_back(const value_type& val) {
 
 template<typename value_type>
 void TFSArray<value_type>::pop_back() {
-    resize(_size - 1);
+    _size--;
 }
 
 template<typename value_type>
 void TFSArray<value_type>::swap(TFSArray<value_type>& arr) noexcept {
-    TFSArray<value_type> temp(arr);
-    arr = *this;
-    *this = temp;
+    _swap(arr);
 }
 
 #endif // __TFSARRAY_H_

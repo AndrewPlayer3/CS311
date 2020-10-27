@@ -1386,7 +1386,7 @@ TEST_CASE( "TFSArray insert" )
                     realloctwice = true;
                 {
                 INFO( "Many inserts - check return value on reallocate-and-copy" );
-                REQUIRE( result == ti.end()-1 );
+                REQUIRE( result == ti.end()-1);
                 }
             }
             realloclast = reallocdone;
