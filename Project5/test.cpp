@@ -1,46 +1,46 @@
 #include <iostream>
+#include <vector>
 #include "tfsarray.h"
 
+using std::vector;
+
 int main() {
-    TFSArray<int> arr(5);
-    for(int i = 0; i < 5; i++) {
-        arr[i] = i;
-        //std::cout << arr[i] << ", ";
-    }
-    //std::cout << std::endl;
-    //std::cout << std::endl;
-    int* result;
-    int size = arr.size();
-    //std::cout << arr.begin() << " " << arr.end() << std::endl;
-    for(int i = 0; i < size + 1; i++) {
-        result = arr.insert(arr.end(), i);
-    }
-    //std::cout << arr.begin() << " " << arr.end() << std::endl;
-    //std::cout << arr.end() - arr.begin() << std::endl;
-    for(int i : arr) std::cout << i << " ";
-    std::cout << std::endl;
-    //std::cout << *result << " " << *arr.end() << std::endl;
-    //std::cout << result << " " << arr.end() << std::endl;
-    //std::cout << arr.end() - result << std::endl;
-
+    
     const size_t SIZE = size_t(10);
-    TFSArray<int> * tip = new TFSArray<int>(SIZE);
+    TFSArray<int> ti_original(SIZE);
     for (size_t i = 0; i < SIZE; ++i)
     {
-        (*tip)[i] = 15-int(i)*int(i);
+        ti_original[i] = 15-int(i)*int(i);
     }
 
-    // Make copy (copy assn)
-    TFSArray<int> ticopy;
-    ticopy = *tip;
-    // Destroy original
-    delete tip;
+    const size_t SIZE2 = size_t(100000);
+    TFSArray<int> ti = ti_original;
 
-    std::cout << ticopy.size() << std::endl;
-
-    for (size_t i = 0; i < SIZE; ++i)
+    // Create expected data
+    vector<int> v(ti_original.begin(), ti_original.end());
+    for (size_t i = SIZE+1; i <= SIZE2; ++i)
     {
-        std::cout << (ticopy[i] == 15-int(i)*int(i)) << std::endl;
+        v.insert(v.end(), 70000-(int(i)-1));
+    }
+
+    // Do inserting
+    int realloccount = 0;       // # of times realloc-&-copy done
+    bool realloctwice = false;  // Did realloc-&-copy 2x in a row?
+    bool realloclast = false;   // Was realloc-&-copy just done?
+    for (size_t i = SIZE+1; i <= SIZE2; ++i)
+    {
+        std::cout << i << std::endl;
+        int * savedata = ti.begin();
+        auto result = ti.insert(ti.end(), 70000-int(ti.size()));
+        std::cout << "Passed Insert" << std::endl;
+        bool reallocdone = (ti.begin() != savedata);  // realloc-&-copy?
+        if (reallocdone)
+        {
+            ++realloccount;
+            if (realloclast)
+                realloctwice = true;
+        }
+        realloclast = reallocdone;
     }
 
 }
