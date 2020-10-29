@@ -144,7 +144,7 @@ value_type* TFSArray<value_type>::insert(TFSArray<value_type>::iterator it, cons
     if(it == end()) {
         return end();
     }
-    std::rotate(it, end()-1, end());
+    std::rotate(begin() + location, end()-1, end());
     return begin() + location;
 }
 
