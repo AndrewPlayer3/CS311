@@ -50,23 +50,23 @@ std::string count_words(const std::string& str) {
 
 int main() {
 
-    std::string filename = "countwords_test.txt";
+    std::string filename;
+    std::cout << "Enter a Filname: ";
+    std::getline(std::cin, filename);
 
     std::ifstream file;
     file.open(filename);
     
     if(!file.is_open()) {
-        std::cout << "File \"" << filename << "\" not found." << std::endl;
+        std::cout << "Error opening: \"" << filename << "\"" << std::endl;
+    } else {
+        std::ostringstream os;
+        std::string line;
+        while(std::getline(file, line)) {
+            os << line;
+        }
+        std::cout << count_words(os.str()) << std::endl;
     }
-
-    std::ostringstream os;
-
-    std::string line;
-    while(std::getline(file, line)) {
-        os << line;
-    }
-
-    std::cout << count_words(os.str()) << std::endl;
     
     return 0;
 }
