@@ -41,9 +41,77 @@ const std::string test_suite_name =
 // *********************************************************************
 
 
-TEST_CASE("DUMMY")
+TEST_CASE("Squares Numbers")
 {
-    // DUMMY TEST CASE; REWRITE THIS AND ADD MORE!!!
+    Squarer s;
+
+    SUBCASE("Squares ints") 
+    {
+        {
+        INFO("Small Int");
+        int i = 10;
+        REQUIRE(s(i) == 100);
+        }
+        {
+        INFO("Large Int");
+        int i = 10000;
+        REQUIRE(s(i) == 100000000);
+        }
+        {
+        INFO("Negative Int");
+        int i = -100;
+        REQUIRE(s(i) == 10000);
+        }
+    }
+    SUBCASE("Squares std::size_ts") 
+    {
+        {
+        INFO("Small Size");
+        std::size_t i = 2;
+        REQUIRE(s(i) == 4);
+        }
+        {
+        INFO("Large Size");
+        int i = 10000;
+        REQUIRE(s(i) == 100000000);
+        }
+    }
+    SUBCASE("Squares floats") 
+    {
+        {
+        INFO("Small Float");
+        float i = 0.123;
+        REQUIRE(s(i) == 0.1513);
+        }
+        {
+        INFO("Large Float");
+        int i = 100000000.1;
+        REQUIRE(s(i) == 10000000020000000.01);
+        }
+        {
+        INFO("Negative Float");
+        int i = -100.1;
+        REQUIRE(s(i) == 102.01);
+        }
+    }
+    SUBCASE("Squares doubles") 
+    {
+        {
+        INFO("Small Float");
+        double i = 0.123;
+        REQUIRE(s(i) == 0.015129);
+        }
+        {
+        INFO("Large Float");
+        double i = 100000000.1;
+        REQUIRE(s(i) == 10000000020000000.01);
+        }
+        {
+        INFO("Negative Float");
+        double i = -100.1;
+        REQUIRE(s(i) == 102.01);
+        }
+    }
 }
 
 
